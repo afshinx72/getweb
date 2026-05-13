@@ -43,8 +43,7 @@ jobs:
             echo "</iframe>"
             echo "</body>"
             echo "</html>"
-          }
-           > fetched-content.html
+          } > fetched-content.html
 
       - name: Commit and push changes
         run: |
