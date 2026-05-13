@@ -1,0 +1,59 @@
+name: Fetch URL Content
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "URL to fetch with curl"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-and-save:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Validate URL
+        run: |
+          URL="${{ github.event.inputs.url }}"
+          if ! [[ "$URL" =~ ^https?:// ]]; then
+            echo "Only http:// or https:// URLs are allowed."
+            exit 1
+          fi
+
+      - name: Fetch URL content
+        run: |
+          URL="${{ github.event.inputs.url }}"
+          {
+            echo "<!doctype html>"
+            echo "<html lang='en'>"
+            echo "<head>"
+            echo "  <meta charset='UTF-8'>"
+            echo "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+            echo "  <title>Fetched Content</title>"
+            echo "</head>"
+            echo "<body>"
+            echo "  <h2>Fetched from: $URL</h2>"
+            echo "  <hr>"
+            echo "  <pre style='white-space: pre-wrap; word-wrap: break-word;'>"
+            curl -L --silent --max-time 30 "$URL" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
+            echo "  </pre>"
+            echo "</body>"
+            echo "</html>"
+          } > fetched-content.html
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add fetched-content.html
+          git commit -m "Update fetched content" || echo "No changes to commit"
+          git push
