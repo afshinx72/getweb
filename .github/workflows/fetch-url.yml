@@ -33,7 +33,6 @@ jobs:
         run: |
           URL="${{ github.event.inputs.url }}"
           {
-          {
             echo "<!doctype html>"
             echo "<html lang='en'>"
             echo "<head><meta charset='UTF-8'><title>Fetched Content</title></head>"
