@@ -32,22 +32,7 @@ jobs:
       - name: Fetch URL content
         run: |
           URL="${{ github.event.inputs.url }}"
-          {
-            echo "<!doctype html>"
-            echo "<html lang='en'>"
-            echo "<head>"
-            echo "  <meta charset='UTF-8'>"
-            echo "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>"
-            echo "  <title>Fetched Content</title>"
-            echo "</head>"
-            echo "<body>"
-            echo "  <h2>Fetched from: $URL</h2>"
-            echo "  <hr>"
-            echo "  <pre style='white-space: pre-wrap; word-wrap: break-word;'>"
-            curl -L --silent --max-time 30 "$URL" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'
-            echo "  </pre>"
-            echo "</body>"
-            echo "</html>"
+          {curl -L --max-time 30 "$URL" 
           } > fetched-content.html
 
       - name: Commit and push changes
