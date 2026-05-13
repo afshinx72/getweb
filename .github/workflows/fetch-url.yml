@@ -33,9 +33,17 @@ jobs:
         run: |
           URL="${{ github.event.inputs.url }}"
           {
-          echo "<!doctype html><head><title>Fetched Content</title></head><body><h1>Saved URL Content</h1  <p>If the action has run successfully, fetched content will be written below:</p> <hr> <iframe style='width:100%;height:80vh;border:1px solid #ccc;'>"
-          curl -L --max-time 30 "$URL"
-          echo "</iframe></body></html>"
+          {
+            echo "<!doctype html>"
+            echo "<html lang='en'>"
+            echo "<head><meta charset='UTF-8'><title>Fetched Content</title></head>"
+            echo "<body>"
+            echo "<h2>Fetched from: $URL</h2>"
+            echo "<iframe style='width:100%;height:80vh;border:1px solid #ccc;'>"
+            curl -L --max-time 30 "$URL"
+            echo "</iframe>"
+            echo "</body>"
+            echo "</html>"
           }
            > fetched-content.html
 
