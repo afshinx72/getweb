@@ -32,8 +32,7 @@ jobs:
       - name: Fetch URL content
         run: |
           URL="${{ github.event.inputs.url }}"
-          {curl -L --max-time 30 "$URL" 
-          } > fetched-content.html
+          curl -L --max-time 30 "$URL" > fetched-content.html
 
       - name: Commit and push changes
         run: |
